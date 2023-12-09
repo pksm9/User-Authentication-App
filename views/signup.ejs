@@ -2,7 +2,55 @@
 <html lang="en">
     <%- include('partials/header'); -%>
 <body>
-    <h2>Sign - up</h2>
+
+    <div class="content">
+        <form>
+            <h2>Sign up</h2>
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" required>
+                <div class="email error"></div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+                <div class="password error"></div>
+                <button>Sign up</button>
+        </form>  
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = form.email.value;
+            const password = form.password.value;
+            const emailError = form.querySelector('.email.error');
+            const passwordError = form.querySelector('.password.error');
+
+            emailError.textContent = '';
+            passwordError.textContent = '';
+
+            try {
+                const res = await fetch('/signup', { 
+                    method: 'POST',
+                    body: JSON.stringify({ email, password }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                console.log(data);
+                if (data.errors) {
+                    emailError.textContent = data.errors.email;
+                    passwordError.textContent = data.errors.password;
+                }
+                if (data.user) {
+                    location.assign('/');
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
+    </script>
+    
 </body>
 <%- include('partials/footer'); -%>
 </html>
