@@ -17,30 +17,46 @@
     </div>
 
     <script>
+
+        // get the form element
         const form = document.querySelector('form');
 
         form.addEventListener('submit', async (e) => {
+            // prevent default action
             e.preventDefault();
+
+            // get user info
             const email = form.email.value;
             const password = form.password.value;
+
+            // access the error divs
             const emailError = form.querySelector('.email.error');
             const passwordError = form.querySelector('.password.error');
-
+            
+            // reset errors
             emailError.textContent = '';
             passwordError.textContent = '';
 
+
             try {
-                const res = await fetch('/signup', { 
+                // send the user info to the server
+                const res = await fetch('/login', { 
                     method: 'POST',
                     body: JSON.stringify({ email, password }),
                     headers: { 'Content-Type': 'application/json' }
                 });
+
+                // get the response from the server
                 const data = await res.json();
                 console.log(data);
+
+                // if there are errors, display them
                 if (data.errors) {
                     emailError.textContent = data.errors.email;
                     passwordError.textContent = data.errors.password;
                 }
+
+                // if user is logged in, redirect to the homepage
                 if (data.user) {
                     location.assign('/');
                 }
