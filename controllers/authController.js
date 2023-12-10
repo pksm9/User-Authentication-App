@@ -92,7 +92,8 @@ module.exports.login_post = async (req, res) => {
   // res.send("user login");
 };
 
-// Q: from where err comes from?
-// A: from User.login() method
-// Q: where is this method defined?
-// A: in backend/models/user.js
+module.exports.logout_get = (req, res) => {
+  // replace cookie with empty cookie with 1ms expiration
+  res.cookie("jwt", "", {maxAge: 1});
+  res.redirect("/");
+};

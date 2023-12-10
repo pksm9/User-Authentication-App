@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const cookieParser = require("cookie-parser");
+const { checkAuth, checkUser } = require("./middleware/authMiddleware");
 // const bodyParser = require("body-parser");
 
 const app = express();
@@ -37,7 +38,8 @@ db.once("open", () => {
 });
 
 // routes
+app.get('*', checkUser);
 app.get("/", (req, res) => res.render("home"));
-app.get("/content", (req, res) => res.render("content"));
+app.get("/content", checkAuth, (req, res) => res.render("content"));
 app.use(authRoutes);
 
